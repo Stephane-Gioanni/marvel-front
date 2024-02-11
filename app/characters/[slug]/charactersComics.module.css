@@ -1,0 +1,107 @@
+.charactersComics {
+  width: 100%;
+  font-family: "Roboto Condensed", sans-serif;
+  background-color: #ffffff;
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  height: 100vh;
+}
+
+.mainHead {
+  display: flex;
+  width: 1100px;
+}
+
+.h1 {
+  font-family: "Roboto Condensed", sans-serif;
+}
+
+.comicsList {
+  width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+.comicBox {
+  background-color: #151515;
+
+  color: white;
+  width: 200px;
+  height: 400px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.comicImage {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-bottom: 5px solid #ed1c23;
+}
+
+.comicBoxBottom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  padding: 20px;
+}
+.comicBoxBottom:hover {
+  background-color: #ed1c23;
+}
+
+.addRemoveButton {
+  display: flex;
+  align-items: center;
+}
+
+.addRemoveButton:hover {
+  cursor: pointer;
+}
+
+.icon {
+  margin-right: 10px;
+}
+
+.pagination {
+  width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  margin-bottom: 50px;
+}
+
+.page {
+  font-size: 20px;
+}
+
+.pagButton {
+  background-color: #ed1d22;
+  padding: 10px 20px;
+  width: 150px;
+  height: 50px;
+  border: none;
+  color: white;
+  font-size: 17px;
+  font-family: "Roboto Condensed", sans-serif;
+  clip-path: polygon(0% 0, 100% 0, 100% 80%, 90% 100%, 0 100%);
+}
+
+.pagButton:hover {
+  cursor: pointer;
+}
+
+.invisibleButton {
+  width: 150px;
+  height: 50px;
+}

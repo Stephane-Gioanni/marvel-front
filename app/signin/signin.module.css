@@ -1,0 +1,62 @@
+.main {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 50px;
+  font-family: "Roboto", sans-serif;
+}
+
+.form {
+  height: 780px;
+  width: 580px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  background-color: white;
+  padding: 75px;
+  border-radius: 15px;
+  border: none;
+}
+
+.signin {
+  width: 100%;
+}
+
+.presentation {
+  line-height: 30px;
+}
+
+.input {
+  width: 440px;
+  height: 70px;
+  background-color: #e8ebf0;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  padding: 20px;
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
+}
+
+.background {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+}
+
+.submit {
+  background-color: #e5242a;
+  width: 100%;
+  border-radius: 50px;
+  color: white;
+  height: 55px;
+  border: none;
+  font-size: 18px;
+  font-family: "Roboto", sans-serif;
+}
+
+.submit {
+  cursor: pointer;
+}

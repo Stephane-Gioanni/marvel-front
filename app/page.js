@@ -1,95 +1,36 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+/* eslint-disable react/no-unescaped-entities */
+import styles from "./page.module.css";
+import Header from "./Components/Header";
+import Footer from "./Components/Footer";
+import { IoIosWarning } from "react-icons/io";
 
 export default function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
+    <div className={styles.home}>
+      <Header></Header>
+      <div className={styles.main}>
+        <p>Welcome on the Marvel world !</p>
+
         <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
+          On this website, you will be able to search for and find your favorite
+          characters and comics in our database. <br />
+          To do this, I have created a server that then calls the official
+          Marvel API to obtain the responses. <br />
+          For each character, you will have access to a list of comics where
+          they can be found. <br />
+          You can also create your own user profile and save your favorite
+          characters and comics as favorites. <br />
+          It will, of course, be possible to edit these lists.
         </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+        <div className={styles.warning}>
+          <IoIosWarning className={styles.icon} />
+          <p>
+            When utilizing the search functionality, please note that the
+            response may be slow. Thank you.
+          </p>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+      <Footer></Footer>
+    </div>
+  );
 }
