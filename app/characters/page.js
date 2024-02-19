@@ -31,10 +31,8 @@ export default function Characters() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/characters?offset=${offset}&limit=${limit}`
+          `https://marvel-back-d3819c392373.herokuapp.com/characters?offset=${offset}&limit=${limit}`
         );
-
-        console.log(response.data.data.results);
 
         setCharactersList(response.data.data);
         setIsLoading(false);
@@ -48,7 +46,7 @@ export default function Characters() {
   const search = async (offset, page) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/characters/search?searchInput=${searchInput}&offset=${offset}&limit=${limit}`
+        `https://marvel-back-d3819c392373.herokuapp.com/characters/search?searchInput=${searchInput}&offset=${offset}&limit=${limit}`
       );
       setCharactersListFiltered(response.data.data);
     } catch (error) {
@@ -61,7 +59,7 @@ export default function Characters() {
       Cookies.set("favChar", JSON.stringify(favChar));
     }
   };
-  console.log(connected);
+
   return isLoading ? (
     <div>
       <Loader></Loader>

@@ -29,7 +29,7 @@ export default function Comics() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/comics?offset=${offset}&limit=${limit}`
+          `https://marvel-back-d3819c392373.herokuapp.com/comics?offset=${offset}&limit=${limit}`
         );
         setComicsList(response.data.data.results);
         setTotal(response.data.data.total);
@@ -43,11 +43,10 @@ export default function Comics() {
 
   const search = async (offset, page) => {
     const response = await axios.get(
-      `http://localhost:4000/comics/search?searchInput=${searchInput}&offset=${offset}&limit=${limit}`
+      `https://marvel-back-d3819c392373.herokuapp.com/comics/search?searchInput=${searchInput}&offset=${offset}&limit=${limit}`
     );
 
     setComicsListFiltered(response.data.data);
-    console.log("comicsListFiltered", comicsListFiltered);
   };
 
   const saveComics = (favArray) => {

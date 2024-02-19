@@ -29,10 +29,10 @@ export default function CharactersComics(params) {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:4000/character/${param}/comics?offset=${offset}&limit=${limit}`
+          `https://marvel-back-d3819c392373.herokuapp.com/character/${param}/comics?offset=${offset}&limit=${limit}`
         );
         const response2 = await axios.get(
-          `http://localhost:4000/character/${param}?offset=${offset}&limit=${limit}`
+          `https://marvel-back-d3819c392373.herokuapp.com/character/${param}?offset=${offset}&limit=${limit}`
         );
         setCharacter(response2.data.data.results[0].name);
         setComics(response.data.data.results);

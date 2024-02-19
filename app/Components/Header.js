@@ -31,6 +31,7 @@ export default function Header() {
                 onClick={() => {
                   setToken(null);
                   removeCookie(token);
+                  window.location.reload();
                 }}
               >
                 Log Off

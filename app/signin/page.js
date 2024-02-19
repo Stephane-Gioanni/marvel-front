@@ -33,7 +33,7 @@ export default function Signin() {
       if (email && password && confirmPassword) {
         if (password === confirmPassword) {
           const response = await axios.post(
-            "http://localhost:4000/user/signin",
+            "https://marvel-back-d3819c392373.herokuapp.com/user/signin",
             {
               email: email,
               username: userName,
@@ -41,7 +41,6 @@ export default function Signin() {
               confirmPassword: confirmPassword,
             }
           );
-          console.log(response.data);
           if (response.data.token) {
             tokenCookie(response.data.token);
             userCookie(response.data);

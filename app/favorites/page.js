@@ -23,19 +23,17 @@ export default function Favorites() {
   const [favCom, setFavCom] = useState(JSON.parse(favComCookie) || []);
   const [token, setToken] = useState(Cookies.get("userToken") || null);
 
-  console.log(favCom);
-
   const editFavChar = (favArray) => {
     if (favArray) {
       Cookies.set("favChar", JSON.stringify(favArray));
     }
   };
-
   const editFavCom = (favArray) => {
     if (favArray) {
       Cookies.set("favCom", JSON.stringify(favArray));
     }
   };
+
   return (
     <div className={styles.favorites}>
       <Header></Header>
@@ -136,7 +134,7 @@ export default function Favorites() {
                         setFavCharOpen(true);
                       }}
                     >
-                      Open your favorites characters
+                      Click here to see your favorites characters
                     </h1>
                   </div>
                 </div>
@@ -233,7 +231,7 @@ export default function Favorites() {
                     <div className={styles.mainHead}>
                       <h1 className={styles.h1}>
                         {" "}
-                        Open your favorites comics.
+                        Click here to see your favorites comics.
                       </h1>
                     </div>{" "}
                   </p>

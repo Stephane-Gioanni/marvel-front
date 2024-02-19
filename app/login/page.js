@@ -7,8 +7,6 @@ import styles from "./login.module.css";
 import Header from "../Components/Header";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
-import Background from "../Images/background.jpg";
 import Link from "next/link";
 import Footer from "../Components/Footer";
 
@@ -33,11 +31,13 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post("http://localhost:4000/user/login", {
-        email: email,
-        password: password,
-      });
-      console.log("hello", response.data);
+      const response = await axios.post(
+        "https://marvel-back-d3819c392373.herokuapp.com/user/login",
+        {
+          email: email,
+          password: password,
+        }
+      );
 
       if (response.data.token) {
         tokenCookie(response.data.token);
