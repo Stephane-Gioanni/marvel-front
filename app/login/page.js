@@ -5,7 +5,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import styles from "./login.module.css";
 import Header from "../Components/Header";
-import { useState } from "react";
+import WidthAlert from "../Components/WidthAlert";
+
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Footer from "../Components/Footer";
@@ -13,6 +15,18 @@ import Footer from "../Components/Footer";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [windowWidth, setWindowWidth] = useState(1200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const tokenCookie = (tokenToSet) => {
     if (tokenToSet) {
@@ -53,45 +67,53 @@ export default function Login() {
   };
 
   return (
-    <div className={styles.login}>
-      <Header></Header>
+    <div>
+      {windowWidth >= 900 ? (
+        <div className={styles.login}>
+          <Header></Header>
 
-      <div className={styles.main}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.login}>
-            <h2>Login</h2>
+          <div className={styles.main}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.login}>
+                <h2>Login</h2>
+              </div>
+
+              <p className={styles.presentation}>
+                Log into your Marvel account. If you don't have one, you can
+                create one{" "}
+                <Link href="/signin" className={styles.here}>
+                  here
+                </Link>
+                .
+              </p>
+              <input
+                type="email"
+                placeholder="Email"
+                className={styles.input}
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                }}
+              />
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <button className={styles.submit} type="submit">
+                Login
+              </button>
+            </form>
           </div>
-
-          <p className={styles.presentation}>
-            Log into your Marvel account. If you don't have one, you can create
-            one{" "}
-            <Link href="/signin" className={styles.here}>
-              here
-            </Link>
-            .
-          </p>
-          <input
-            type="email"
-            placeholder="Email"
-            className={styles.input}
-            value={email}
-            onChange={(event) => {
-              setEmail(event.target.value);
-            }}
-          />
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <button className={styles.submit} type="submit">
-            Login
-          </button>
-        </form>
-      </div>
-      <Footer></Footer>
+          <Footer></Footer>
+        </div>
+      ) : (
+        <div>
+          <WidthAlert></WidthAlert>
+        </div>
+      )}
     </div>
   );
 }

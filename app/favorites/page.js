@@ -3,7 +3,8 @@
 import styles from "./favorites.module.css";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
-import { useState } from "react";
+import WidthAlert from "../Components/WidthAlert";
+import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +23,18 @@ export default function Favorites() {
   );
   const [favCom, setFavCom] = useState(JSON.parse(favComCookie) || []);
   const [token, setToken] = useState(Cookies.get("userToken") || null);
+  const [windowWidth, setWindowWidth] = useState(1200);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const editFavChar = (favArray) => {
     if (favArray) {
@@ -35,221 +48,239 @@ export default function Favorites() {
   };
 
   return (
-    <div className={styles.favorites}>
-      <Header></Header>
-      <div className={styles.main}>
-        {token ? (
-          <div>
-            <div className={styles.favChar}>
-              {favCharOpen === true ? (
-                <div className={styles.favCharSection}>
-                  {favChar.length > 0 ? (
-                    <div>
-                      <div className={styles.mainHeadOpen}>
-                        <h1>Your favorites characters</h1>
-                        <div
-                          onClick={() => {
-                            setFavCharOpen(false);
-                          }}
-                          className={styles.close}
-                        >
-                          <IoCloseSharp />
-                        </div>
-                      </div>{" "}
-                      <div className={styles.favList}>
-                        {favChar.map((character, index) => {
-                          return (
-                            <div className={styles.favBox} key={character.id}>
-                              <Image
-                                className={styles.favImage}
-                                src={character.picture}
-                                alt="Picture of the comic"
-                                width={500}
-                                height={500}
-                              ></Image>
-                              <div className={styles.favBoxBottom}>
-                                <p>{character.name}</p>
-                                <div
-                                  className={styles.addRemoveButton}
-                                  onClick={() => {
-                                    let newFavChar = [...favChar];
-
-                                    for (
-                                      let i = 0;
-                                      i < newFavChar.length;
-                                      i++
-                                    ) {
-                                      if (newFavChar[i].id === character.id) {
-                                        newFavChar.splice(i, 1);
-                                      }
-                                    }
-                                    setFavChar(newFavChar);
-                                    editFavChar(newFavChar);
-                                  }}
-                                >
-                                  <GiCrossMark className={styles.icon} />
-                                  <p> Remove from fav</p>
-                                </div>
-                              </div>
+    <div>
+      {windowWidth >= 900 ? (
+        <div className={styles.favorites}>
+          <Header></Header>
+          <div className={styles.main}>
+            {token ? (
+              <div>
+                <div className={styles.favChar}>
+                  {favCharOpen === true ? (
+                    <div className={styles.favCharSection}>
+                      {favChar.length > 0 ? (
+                        <div>
+                          <div className={styles.mainHeadOpen}>
+                            <h1>Your favorites characters</h1>
+                            <div
+                              onClick={() => {
+                                setFavCharOpen(false);
+                              }}
+                              className={styles.close}
+                            >
+                              <IoCloseSharp />
                             </div>
-                          );
-                        })}
-                      </div>
+                          </div>{" "}
+                          <div className={styles.favList}>
+                            {favChar.map((character, index) => {
+                              return (
+                                <div
+                                  className={styles.favBox}
+                                  key={character.id}
+                                >
+                                  <Image
+                                    className={styles.favImage}
+                                    src={character.picture}
+                                    alt="Picture of the comic"
+                                    width={500}
+                                    height={500}
+                                  ></Image>
+                                  <div className={styles.favBoxBottom}>
+                                    <p>{character.name}</p>
+                                    <div
+                                      className={styles.addRemoveButton}
+                                      onClick={() => {
+                                        let newFavChar = [...favChar];
+
+                                        for (
+                                          let i = 0;
+                                          i < newFavChar.length;
+                                          i++
+                                        ) {
+                                          if (
+                                            newFavChar[i].id === character.id
+                                          ) {
+                                            newFavChar.splice(i, 1);
+                                          }
+                                        }
+                                        setFavChar(newFavChar);
+                                        editFavChar(newFavChar);
+                                      }}
+                                    >
+                                      <GiCrossMark className={styles.icon} />
+                                      <p> Remove from fav</p>
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={styles.emptyFavCharList}>
+                          <div className={styles.headerEmptyFavCharList}>
+                            <div className={styles.mainHead}>
+                              <h1>Your favorites characters</h1>
+                            </div>
+                            <p
+                              onClick={() => {
+                                setFavCharOpen(false);
+                              }}
+                              className={styles.close}
+                            >
+                              <IoCloseSharp />
+                            </p>
+                          </div>
+
+                          <p>Your favorites characters list is empty </p>
+                          <Link href="/characters">
+                            <p>
+                              Find some of your{" "}
+                              <span className={styles.redFont}>
+                                favorites characters
+                              </span>{" "}
+                              !
+                            </p>
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className={styles.emptyFavCharList}>
-                      <div className={styles.headerEmptyFavCharList}>
-                        <div className={styles.mainHead}>
-                          <h1>Your favorites characters</h1>
-                        </div>
-                        <p
+                    <div className={styles.favCharSection}>
+                      <div className={styles.mainHead}>
+                        <h1
+                          className={styles.h1}
                           onClick={() => {
-                            setFavCharOpen(false);
+                            setFavCharOpen(true);
                           }}
-                          className={styles.close}
                         >
-                          <IoCloseSharp />
-                        </p>
+                          Click here to see your favorites characters
+                        </h1>
                       </div>
-
-                      <p>Your favorites characters list is empty </p>
-                      <Link href="/characters">
-                        <p>
-                          Find some of your{" "}
-                          <span className={styles.redFont}>
-                            favorites characters
-                          </span>{" "}
-                          !
-                        </p>
-                      </Link>
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className={styles.favCharSection}>
-                  <div className={styles.mainHead}>
-                    <h1
-                      className={styles.h1}
-                      onClick={() => {
-                        setFavCharOpen(true);
-                      }}
-                    >
-                      Click here to see your favorites characters
-                    </h1>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className={styles.favCom}>
-              {favComOpen === true ? (
-                <div className={styles.favCharSection}>
-                  {favCom.length > 0 ? (
-                    <div>
-                      <div className={styles.mainHeadOpen}>
-                        <h1>Your favorites comics</h1>
-                        <p
-                          onClick={() => {
-                            setFavComOpen(false);
-                          }}
-                          className={styles.close}
-                        >
-                          <IoCloseSharp />
-                        </p>
-                      </div>{" "}
-                      <div className={styles.favList}>
-                        {favCom.map((comic, index) => {
-                          return (
-                            <div className={styles.favBox} key={comic.id}>
-                              <Image
-                                className={styles.favImage}
-                                src={comic.picture}
-                                alt="Picture of the comic"
-                                width={500}
-                                height={500}
-                              ></Image>
-                              <div className={styles.favBoxBottom}>
-                                <p>{comic.title}</p>
-                                <div
-                                  className={styles.addRemoveButton}
-                                  onClick={() => {
-                                    let newfavCom = [...favCom];
+                <div className={styles.favCom}>
+                  {favComOpen === true ? (
+                    <div className={styles.favCharSection}>
+                      {favCom.length > 0 ? (
+                        <div>
+                          <div className={styles.mainHeadOpen}>
+                            <h1>Your favorites comics</h1>
+                            <p
+                              onClick={() => {
+                                setFavComOpen(false);
+                              }}
+                              className={styles.close}
+                            >
+                              <IoCloseSharp />
+                            </p>
+                          </div>{" "}
+                          <div className={styles.favList}>
+                            {favCom.map((comic, index) => {
+                              return (
+                                <div className={styles.favBox} key={comic.id}>
+                                  <Image
+                                    className={styles.favImage}
+                                    src={comic.picture}
+                                    alt="Picture of the comic"
+                                    width={500}
+                                    height={500}
+                                  ></Image>
+                                  <div className={styles.favBoxBottom}>
+                                    <p>{comic.title}</p>
+                                    <div
+                                      className={styles.addRemoveButton}
+                                      onClick={() => {
+                                        let newfavCom = [...favCom];
 
-                                    for (let i = 0; i < newfavCom.length; i++) {
-                                      if (newfavCom[i].id === comic.id) {
-                                        newfavCom.splice(i, 1);
-                                      }
-                                    }
-                                    setFavCom(newfavCom);
-                                    editFavCom(newfavCom);
-                                  }}
-                                >
-                                  <GiCrossMark className={styles.icon} />
-                                  <p> Remove from fav</p>{" "}
+                                        for (
+                                          let i = 0;
+                                          i < newfavCom.length;
+                                          i++
+                                        ) {
+                                          if (newfavCom[i].id === comic.id) {
+                                            newfavCom.splice(i, 1);
+                                          }
+                                        }
+                                        setFavCom(newfavCom);
+                                        editFavCom(newfavCom);
+                                      }}
+                                    >
+                                      <GiCrossMark className={styles.icon} />
+                                      <p> Remove from fav</p>{" "}
+                                    </div>
+                                  </div>
                                 </div>
-                              </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className={styles.emptyFavComList}>
+                          <div className={styles.headerEmptyfavComList}>
+                            <div className={styles.mainHead}>
+                              <h1>Your favorites comics</h1>
                             </div>
-                          );
-                        })}
-                      </div>
+                            <p
+                              onClick={() => {
+                                setFavComOpen(false);
+                              }}
+                              className={styles.close}
+                            >
+                              <IoCloseSharp />
+                            </p>
+                          </div>
+
+                          <p>Your favorites comics list is empty </p>
+                          <Link href="/comics">
+                            <p>
+                              Find some of your{" "}
+                              <span className={styles.redFont}>
+                                favorites comics
+                              </span>{" "}
+                              !
+                            </p>
+                          </Link>
+                        </div>
+                      )}
                     </div>
                   ) : (
-                    <div className={styles.emptyFavComList}>
-                      <div className={styles.headerEmptyfavComList}>
+                    <div className={styles.favComSection}>
+                      <p
+                        onClick={() => {
+                          setFavComOpen(true);
+                        }}
+                      >
                         <div className={styles.mainHead}>
-                          <h1>Your favorites comics</h1>
-                        </div>
-                        <p
-                          onClick={() => {
-                            setFavComOpen(false);
-                          }}
-                          className={styles.close}
-                        >
-                          <IoCloseSharp />
-                        </p>
-                      </div>
-
-                      <p>Your favorites comics list is empty </p>
-                      <Link href="/comics">
-                        <p>
-                          Find some of your{" "}
-                          <span className={styles.redFont}>
-                            favorites comics
-                          </span>{" "}
-                          !
-                        </p>
-                      </Link>
+                          <h1 className={styles.h1}>
+                            {" "}
+                            Click here to see your favorites comics.
+                          </h1>
+                        </div>{" "}
+                      </p>
                     </div>
                   )}
                 </div>
-              ) : (
-                <div className={styles.favComSection}>
-                  <p
-                    onClick={() => {
-                      setFavComOpen(true);
-                    }}
-                  >
-                    <div className={styles.mainHead}>
-                      <h1 className={styles.h1}>
-                        {" "}
-                        Click here to see your favorites comics.
-                      </h1>
-                    </div>{" "}
-                  </p>
-                </div>
-              )}
-            </div>
+              </div>
+            ) : (
+              <div>
+                <p>You must have an account to save favorites</p>
+                <p>
+                  <Link href="/signin"> Create one</Link> or{" "}
+                  <Link href="/login">login</Link>
+                </p>
+              </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <p>You must have an account to save favorites</p>
-            <p>
-              <Link href="/signin"> Create one</Link> or{" "}
-              <Link href="/login">login</Link>
-            </p>
-          </div>
-        )}
-      </div>
-      <Footer></Footer>
+          <Footer></Footer>
+        </div>
+      ) : (
+        <div>
+          {" "}
+          <WidthAlert></WidthAlert>
+        </div>
+      )}
     </div>
   );
 }

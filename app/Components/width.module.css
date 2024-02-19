@@ -1,0 +1,10 @@
+.width {
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  color: #ee1b23;
+  font-family: "Roboto Condensed", sans-serif;
+}

@@ -4,6 +4,7 @@ import styles from "./comics.module.css";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import Loader from "../Components/Loader";
+import WidthAlert from "../Components/WidthAlert";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -12,6 +13,7 @@ import { RiAddCircleLine } from "react-icons/ri";
 import { GiCrossMark } from "react-icons/gi";
 
 export default function Comics() {
+  const [windowWidth, setWindowWidth] = useState(1200);
   const [comicsList, setComicsList] = useState();
   const [searchInput, setSearchInput] = useState("");
   const [comicsListFiltered, setComicsListFiltered] = useState();
@@ -39,6 +41,14 @@ export default function Comics() {
       }
     };
     fetchData();
+
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, [offset, limit]);
 
   const search = async (offset, page) => {
@@ -58,257 +68,269 @@ export default function Comics() {
   return isLoading ? (
     <Loader></Loader>
   ) : (
-    <div className={styles.comics}>
-      <Header></Header>
-      <div className={styles.main}>
-        <div className={styles.mainHead}>
-          <h1>MARVEL COMICS LIST</h1>
-        </div>
+    <div>
+      {windowWidth >= 900 ? (
+        <div className={styles.comics}>
+          <Header></Header>
+          <div className={styles.main}>
+            <div className={styles.mainHead}>
+              <h1>MARVEL COMICS LIST</h1>
+            </div>
 
-        <div className={styles.searchSection}>
-          <input
-            className={styles.searchInput}
-            type="text"
-            placeholder="Search "
-            value={searchInput}
-            onChange={(event) => setSearchInput(event.target.value)}
-          />
-          <div className={styles.searchButtons}>
-            <button
-              className={styles.searchButton}
-              onClick={() => {
-                setPage(1);
-                search();
-              }}
-            >
-              Search
-            </button>
-            <button
-              className={styles.searchButton}
-              onClick={() => {
-                setComicsListFiltered(null);
-                setSearchInput("");
-                setOffset(0);
-                setPage(1);
-              }}
-            >
-              Reset search
-            </button>
-          </div>
-        </div>
-        {comicsListFiltered ? (
-          <div>
-            <div>
-              <div className={styles.comicsList}>
-                {comicsListFiltered.results.map((comic, index) => {
-                  let image =
-                    comic.thumbnail.path + "." + comic.thumbnail.extension;
+            <div className={styles.searchSection}>
+              <input
+                className={styles.searchInput}
+                type="text"
+                placeholder="Search "
+                value={searchInput}
+                onChange={(event) => setSearchInput(event.target.value)}
+              />
+              <div className={styles.searchButtons}>
+                <button
+                  className={styles.searchButton}
+                  onClick={() => {
+                    setPage(1);
+                    search();
+                  }}
+                >
+                  Search
+                </button>
+                <button
+                  className={styles.searchButton}
+                  onClick={() => {
+                    setComicsListFiltered(null);
+                    setSearchInput("");
+                    setOffset(0);
+                    setPage(1);
+                  }}
+                >
+                  Reset search
+                </button>
+              </div>
+            </div>
+            {comicsListFiltered ? (
+              <div>
+                <div>
+                  <div className={styles.comicsList}>
+                    {comicsListFiltered.results.map((comic, index) => {
+                      let image =
+                        comic.thumbnail.path + "." + comic.thumbnail.extension;
 
-                  const checkFav = favComics.some(
-                    (element) => element.id === comic.id
-                  );
+                      const checkFav = favComics.some(
+                        (element) => element.id === comic.id
+                      );
 
-                  return (
-                    <div className={styles.comicBox} key={comic.id}>
-                      <Image
-                        priority
-                        className={styles.comicImage}
-                        src={image}
-                        alt="Picture of the comic"
-                        width={500}
-                        height={500}
-                      />
-                      <div className={styles.comicBoxBottom}>
-                        <p>{comic.title}</p>
-                        {checkFav === true ? (
-                          <div
-                            className={styles.addRemoveButton}
-                            onClick={() => {
-                              let newFavComics = [...favComics];
-                              for (let i = 0; i < newFavComics.length; i++) {
-                                if (newFavComics[i].id === comic.id) {
-                                  newFavComics.splice(i, 1);
+                      return (
+                        <div className={styles.comicBox} key={comic.id}>
+                          <Image
+                            priority
+                            className={styles.comicImage}
+                            src={image}
+                            alt="Picture of the comic"
+                            width={500}
+                            height={500}
+                          />
+                          <div className={styles.comicBoxBottom}>
+                            <p>{comic.title}</p>
+                            {checkFav === true ? (
+                              <div
+                                className={styles.addRemoveButton}
+                                onClick={() => {
+                                  let newFavComics = [...favComics];
+                                  for (
+                                    let i = 0;
+                                    i < newFavComics.length;
+                                    i++
+                                  ) {
+                                    if (newFavComics[i].id === comic.id) {
+                                      newFavComics.splice(i, 1);
+                                    }
+                                    setFavComics(newFavComics);
+                                    saveComics(newFavComics);
+                                  }
+                                }}
+                              >
+                                <GiCrossMark className={styles.icon} />
+                                <p> Remove from fav</p>
+                              </div>
+                            ) : (
+                              <div
+                                className={styles.addRemoveButton}
+                                onClick={() => {
+                                  let newFavComics = [...favComics];
+                                  newFavComics.push({
+                                    title: comic.title,
+                                    id: comic.id,
+                                    picture: image,
+                                  });
+                                  setFavComics(newFavComics);
+                                  saveComics(newFavComics);
+                                }}
+                              >
+                                <RiAddCircleLine className={styles.icon} />
+                                <p> Add to fav</p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div className={styles.pagination}>
+                    {offset >= limit ? (
+                      <button
+                        className={styles.pagButton}
+                        onClick={() => {
+                          if (offset >= limit) {
+                            const newOffset = offset - limit;
+                            const newPage = page - 1;
+                            setOffset(newOffset);
+                            setPage(newPage);
+                            search(newOffset, newPage);
+                          }
+                        }}
+                      >
+                        Previous
+                      </button>
+                    ) : (
+                      <div className={styles.invisibleButton}></div>
+                    )}
+
+                    <p className={styles.page}>{page}</p>
+
+                    {offset < comicsListFiltered.total &&
+                    comicsListFiltered.count >= limit ? (
+                      <button
+                        className={styles.pagButton}
+                        onClick={() => {
+                          if (
+                            offset < comicsListFiltered.total &&
+                            comicsListFiltered.count >= limit
+                          ) {
+                            const newOffset = offset + limit;
+                            const newPage = page + 1;
+                            setOffset(newOffset);
+                            setPage(newPage);
+                            search(newOffset, newPage);
+                          }
+                        }}
+                      >
+                        Next
+                      </button>
+                    ) : (
+                      <div className={styles.invisibleButton}></div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className={styles.comicsList}>
+                  {comicsList.map((comic, index) => {
+                    let image =
+                      comic.thumbnail.path + "." + comic.thumbnail.extension;
+
+                    const checkFav = favComics.some(
+                      (element) => element.id === comic.id
+                    );
+                    return (
+                      <div className={styles.comicBox} key={comic.id}>
+                        <Image
+                          priority
+                          className={styles.comicImage}
+                          src={image}
+                          alt="Picture of the comic"
+                          width={500}
+                          height={500}
+                        />
+                        <div className={styles.comicBoxBottom}>
+                          <p>{comic.title}</p>
+                          {checkFav === true ? (
+                            <div
+                              className={styles.addRemoveButton}
+                              onClick={() => {
+                                let newFavComics = [...favComics];
+
+                                for (let i = 0; i < newFavComics.length; i++) {
+                                  if (newFavComics[i].id === comic.id) {
+                                    newFavComics.splice(i, 1);
+                                  }
+                                  setFavComics(newFavComics);
+                                  saveComics(newFavComics);
                                 }
+                              }}
+                            >
+                              <GiCrossMark className={styles.icon} />
+                              <p> Remove from fav</p>{" "}
+                            </div>
+                          ) : (
+                            <div
+                              className={styles.addRemoveButton}
+                              onClick={() => {
+                                let newFavComics = [...favComics];
+                                newFavComics.push({
+                                  title: comic.title,
+                                  id: comic.id,
+                                  picture: image,
+                                });
                                 setFavComics(newFavComics);
                                 saveComics(newFavComics);
-                              }
-                            }}
-                          >
-                            <GiCrossMark className={styles.icon} />
-                            <p> Remove from fav</p>
-                          </div>
-                        ) : (
-                          <div
-                            className={styles.addRemoveButton}
-                            onClick={() => {
-                              let newFavComics = [...favComics];
-                              newFavComics.push({
-                                title: comic.title,
-                                id: comic.id,
-                                picture: image,
-                              });
-                              setFavComics(newFavComics);
-                              saveComics(newFavComics);
-                            }}
-                          >
-                            <RiAddCircleLine className={styles.icon} />
-                            <p> Add to fav</p>
-                          </div>
-                        )}
+                              }}
+                            >
+                              <RiAddCircleLine className={styles.icon} />
+                              <p> Add to fav</p>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+
+                <div className={styles.pagination}>
+                  {offset >= limit ? (
+                    <button
+                      className={styles.pagButton}
+                      onClick={() => {
+                        if (offset >= limit) {
+                          setOffset(offset - limit);
+                          setPage(page - 1);
+                        }
+                      }}
+                    >
+                      Previous
+                    </button>
+                  ) : (
+                    <div className={styles.invisibleButton}></div>
+                  )}
+
+                  <p className={styles.page}>{page}</p>
+                  {offset < total ? (
+                    <button
+                      className={styles.pagButton}
+                      onClick={() => {
+                        if (offset < total) {
+                          setOffset(offset + limit);
+                          setPage(page + 1);
+                        }
+                      }}
+                    >
+                      Next
+                    </button>
+                  ) : (
+                    <div className={styles.invisibleButton}></div>
+                  )}
+                </div>
               </div>
-              <div className={styles.pagination}>
-                {offset >= limit ? (
-                  <button
-                    className={styles.pagButton}
-                    onClick={() => {
-                      if (offset >= limit) {
-                        const newOffset = offset - limit;
-                        const newPage = page - 1;
-                        setOffset(newOffset);
-                        setPage(newPage);
-                        search(newOffset, newPage);
-                      }
-                    }}
-                  >
-                    Previous
-                  </button>
-                ) : (
-                  <div className={styles.invisibleButton}></div>
-                )}
-
-                <p className={styles.page}>{page}</p>
-
-                {offset < comicsListFiltered.total &&
-                comicsListFiltered.count >= limit ? (
-                  <button
-                    className={styles.pagButton}
-                    onClick={() => {
-                      if (
-                        offset < comicsListFiltered.total &&
-                        comicsListFiltered.count >= limit
-                      ) {
-                        const newOffset = offset + limit;
-                        const newPage = page + 1;
-                        setOffset(newOffset);
-                        setPage(newPage);
-                        search(newOffset, newPage);
-                      }
-                    }}
-                  >
-                    Next
-                  </button>
-                ) : (
-                  <div className={styles.invisibleButton}></div>
-                )}
-              </div>
-            </div>
+            )}
           </div>
-        ) : (
-          <div>
-            <div className={styles.comicsList}>
-              {comicsList.map((comic, index) => {
-                let image =
-                  comic.thumbnail.path + "." + comic.thumbnail.extension;
-
-                const checkFav = favComics.some(
-                  (element) => element.id === comic.id
-                );
-                return (
-                  <div className={styles.comicBox} key={comic.id}>
-                    <Image
-                      priority
-                      className={styles.comicImage}
-                      src={image}
-                      alt="Picture of the comic"
-                      width={500}
-                      height={500}
-                    />
-                    <div className={styles.comicBoxBottom}>
-                      <p>{comic.title}</p>
-                      {checkFav === true ? (
-                        <div
-                          className={styles.addRemoveButton}
-                          onClick={() => {
-                            let newFavComics = [...favComics];
-
-                            for (let i = 0; i < newFavComics.length; i++) {
-                              if (newFavComics[i].id === comic.id) {
-                                newFavComics.splice(i, 1);
-                              }
-                              setFavComics(newFavComics);
-                              saveComics(newFavComics);
-                            }
-                          }}
-                        >
-                          <GiCrossMark className={styles.icon} />
-                          <p> Remove from fav</p>{" "}
-                        </div>
-                      ) : (
-                        <div
-                          className={styles.addRemoveButton}
-                          onClick={() => {
-                            let newFavComics = [...favComics];
-                            newFavComics.push({
-                              title: comic.title,
-                              id: comic.id,
-                              picture: image,
-                            });
-                            setFavComics(newFavComics);
-                            saveComics(newFavComics);
-                          }}
-                        >
-                          <RiAddCircleLine className={styles.icon} />
-                          <p> Add to fav</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className={styles.pagination}>
-              {offset >= limit ? (
-                <button
-                  className={styles.pagButton}
-                  onClick={() => {
-                    if (offset >= limit) {
-                      setOffset(offset - limit);
-                      setPage(page - 1);
-                    }
-                  }}
-                >
-                  Previous
-                </button>
-              ) : (
-                <div className={styles.invisibleButton}></div>
-              )}
-
-              <p className={styles.page}>{page}</p>
-              {offset < total ? (
-                <button
-                  className={styles.pagButton}
-                  onClick={() => {
-                    if (offset < total) {
-                      setOffset(offset + limit);
-                      setPage(page + 1);
-                    }
-                  }}
-                >
-                  Next
-                </button>
-              ) : (
-                <div className={styles.invisibleButton}></div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-      <Footer></Footer>
+          <Footer></Footer>
+        </div>
+      ) : (
+        <div>
+          <WidthAlert></WidthAlert>
+        </div>
+      )}
     </div>
   );
 }

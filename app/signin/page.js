@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
+import WidthAlert from "../Components/WidthAlert";
 import styles from "./signin.module.css";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -13,7 +14,20 @@ export default function Signin() {
   const [userName, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [windowWidth, setWindowWidth] = useState(1200);
+
   const router = useRouter();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const tokenCookie = (tokenToSet) => {
     if (tokenToSet) {
@@ -58,51 +72,59 @@ export default function Signin() {
   };
 
   return (
-    <div className={styles.signin}>
-      <Header></Header>
-      <div className={styles.main}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.signin}>
-            <h2>Create your account</h2>
+    <div>
+      {windowWidth >= 900 ? (
+        <div className={styles.signin}>
+          <Header></Header>
+          <div className={styles.main}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+              <div className={styles.signin}>
+                <h2>Create your account</h2>
+              </div>
+              <p className={styles.presentation}>
+                Fill in the required information below to create an account and
+                join the incredible world of Marvel.
+              </p>
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <input
+                className={styles.input}
+                type="text"
+                placeholder="Username"
+                value={userName}
+                onChange={(event) => setUsername(event.target.value)}
+              />
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+              />
+              <input
+                className={styles.input}
+                type="password"
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+              />
+              <button type="submit" className={styles.submit}>
+                Create your account
+              </button>
+            </form>
           </div>
-          <p className={styles.presentation}>
-            Fill in the required information below to create an account and join
-            the incredible world of Marvel.
-          </p>
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="Email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <input
-            className={styles.input}
-            type="text"
-            placeholder="Username"
-            value={userName}
-            onChange={(event) => setUsername(event.target.value)}
-          />
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-          <input
-            className={styles.input}
-            type="password"
-            placeholder="Confirm Password"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-          />
-          <button type="submit" className={styles.submit}>
-            Create your account
-          </button>
-        </form>
-      </div>
-      <Footer></Footer>
+          <Footer></Footer>
+        </div>
+      ) : (
+        <div>
+          <WidthAlert></WidthAlert>
+        </div>
+      )}
     </div>
   );
 }
