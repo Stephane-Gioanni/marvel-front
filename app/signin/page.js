@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Header from "../Components/Header";
 import Footer from "../Components/Footer";
 import WidthAlert from "../Components/WidthAlert";
+import AlertLog from "../Components/AlertLog";
 import styles from "./signin.module.css";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -15,6 +16,8 @@ export default function Signin() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [windowWidth, setWindowWidth] = useState(1200);
+  const [alertLog, setAlertLog] = useState(false);
+  const [alertReason, setAlertReason] = useState("");
 
   const router = useRouter();
 
@@ -61,13 +64,15 @@ export default function Signin() {
             router.push("/");
           }
         } else {
-          alert("Your password are different");
+          setAlertLog(true);
+          setAlertReason("Your password are different");
         }
       } else {
-        alert("Missing parameters");
+        setAlertLog(true);
+        setAlertReason("Missing parameters");
       }
     } catch (error) {
-      alert(error.response.data.message);
+      setAlertReason(error.response.data.message);
     }
   };
 
@@ -113,6 +118,13 @@ export default function Signin() {
                 value={confirmPassword}
                 onChange={(event) => setConfirmPassword(event.target.value)}
               />
+              {alertLog === true ? (
+                <div onClick={() => setAlertLog(false)}>
+                  <AlertLog alertReason={alertReason}></AlertLog>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <button type="submit" className={styles.submit}>
                 Create your account
               </button>

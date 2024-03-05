@@ -1,0 +1,15 @@
+.alert {
+  height: 200px;
+  width: 900px;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #e4252a;
+  color: white;
+  font-family: "Roboto Condensed", sans-serif;
+  position: absolute;
+  left: 497px;
+  top: 250px;
+  border-radius: 25px;
+}

@@ -6,7 +6,7 @@ import Cookies from "js-cookie";
 import styles from "./login.module.css";
 import Header from "../Components/Header";
 import WidthAlert from "../Components/WidthAlert";
-
+import AlertLog from "../Components/AlertLog";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,6 +16,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [windowWidth, setWindowWidth] = useState(1200);
+  const [alertLog, setAlertLog] = useState(false);
+  const [alertReason, setAlertReason] = useState("");
 
   useEffect(() => {
     const handleResize = () => {
@@ -59,10 +61,14 @@ export default function Login() {
 
         router.push("/");
       } else {
-        alert(response);
+        setAlertReason(error.response.data.message);
+
+        setAlertLog(true);
       }
     } catch (error) {
-      alert(error.response.data.message);
+      setAlertReason(error.response.data.message);
+
+      setAlertLog(true);
     }
   };
 
@@ -102,6 +108,13 @@ export default function Login() {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
+              {alertLog === true ? (
+                <div onClick={() => setAlertLog(false)}>
+                  <AlertLog alertReason={alertReason}></AlertLog>
+                </div>
+              ) : (
+                <div></div>
+              )}
               <button className={styles.submit} type="submit">
                 Login
               </button>
