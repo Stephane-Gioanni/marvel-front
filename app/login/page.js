@@ -62,12 +62,10 @@ export default function Login() {
         router.push("/");
       } else {
         setAlertReason(error.response.data.message);
-
         setAlertLog(true);
       }
     } catch (error) {
       setAlertReason(error.response.data.message);
-
       setAlertLog(true);
     }
   };
