@@ -72,6 +72,7 @@ export default function Signin() {
         setAlertReason("Missing parameters");
       }
     } catch (error) {
+      setAlertLog(true);
       setAlertReason(error.response.data.message);
     }
   };
